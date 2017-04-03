@@ -106,57 +106,63 @@ bool isMeetReq(string opr[10], int size, Map f, int arr[10], int oprVal[10]){
 }
 
 int main(){
-	int arr[10]={0,1,2,3,4,5,6,7,8,9};
-	Map f;
 	string filename;
-	cin >> filename;
-	fstream file(filename.c_str(), ios_base::in);
-    ofstream outfile; outfile.open("output.txt");
-
-	string opr[10],x,res,separator;
-	int size=0;
-    while(file >> x) {
-    	cout << x << endl;
-        if(x[0]!='-'){
-            if(*(x.end()-1)=='+')
-                x.erase(x.end()-1);
-            opr[size++]=x;
-        } else{
-            separator=x;
-            file >> x;
-    		cout << x << endl;
-            opr[size++]=x;
-        }
-        updateMap(x,f);
-    }
-    cout << endl;
-
-    int oprVal[10],arrPrev[10]={-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
-    bool found=false;
-    float t;
-    clock_t tStart = clock();
 	do{
-		if(isMeetReq(opr, size, f, arr, oprVal)){
-			if(isSame(arrPrev,arr,f.getN())) continue;
-			t=(double)(clock() - tStart)/CLOCKS_PER_SEC;
-			int resVal=0,i=0;
-			for(;i<size-2;i++){
-				outfile << oprVal[i] << endl; cout << oprVal[i] << endl;
-				resVal+=oprVal[i];
+		cout << "# untuk keluar" << endl;
+		cout << "Masukan nama file : ";
+		cin >> filename;
+		if(filename!="#"){
+			int arr[10]={0,1,2,3,4,5,6,7,8,9};
+			Map f;
+			fstream file(filename.c_str(), ios_base::in);
+		    ofstream outfile("output.out"); outfile.open("output.out");
+
+			string opr[10],x,res,separator;
+			int size=0;
+		    while(file >> x) {
+		    	cout << x << endl;
+		        if(x[0]!='-'){
+		            if(*(x.end()-1)=='+')
+		                x.erase(x.end()-1);
+		            opr[size++]=x;
+		        } else{
+		            separator=x;
+		            file >> x;
+		    		cout << x << endl;
+		            opr[size++]=x;
+		        }
+		        updateMap(x,f);
+		    }
+		    cout << endl;
+
+		    int oprVal[10],arrPrev[10]={-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
+		    bool found=false;
+		    float t;
+		    clock_t tStart = clock();
+			do{
+				if(isMeetReq(opr, size, f, arr, oprVal)){
+					if(isSame(arrPrev,arr,f.getN())) continue;
+					t=(double)(clock() - tStart)/CLOCKS_PER_SEC;
+					int resVal=0,i=0;
+					for(;i<size-2;i++){
+						outfile << oprVal[i] << endl; cout << oprVal[i] << endl;
+						resVal+=oprVal[i];
+					}
+					outfile << oprVal[i] << "+" << endl; cout << oprVal[i] << "+" << endl;
+					outfile << separator << endl; cout << separator << endl;
+					resVal+=oprVal[i];
+					outfile << resVal << endl << endl; cout << resVal << endl << endl;
+					assignArr(arrPrev,arr,f.getN());
+					found=true;
+				}
+			} while(next_permutation(0, 10, arr));
+			
+			if(!found){
+				outfile << "Tidak ditemukan kombinasi yang mungkin\n\n"; cout << "Tidak ditemukan kombinasi yang mungkin\n\n";
 			}
-			outfile << oprVal[i] << "+" << endl; cout << oprVal[i] << "+" << endl;
-			outfile << separator << endl; cout << separator << endl;
-			resVal+=oprVal[i];
-			outfile << resVal << endl << endl; cout << resVal << endl << endl;
-			assignArr(arrPrev,arr,f.getN());
-			found=true;
+		    outfile << "Waktu yang diperlukan : " << t << "s" << endl; cout << "Waktu yang diperlukan : " << t << "s" << endl;
+		    outfile.close();
 		}
-	} while(next_permutation(0, 10, arr));
-	
-	if(!found){
-		outfile << "Tidak ditemukan kombinasi yang mungkin\n\n"; cout << "Tidak ditemukan kombinasi yang mungkin\n\n";
-	}
-    outfile << "Waktu yang diperlukan : " << t << "s" << endl; cout << "Waktu yang diperlukan : " << t << "s" << endl;
-    outfile.close();
+	} while (filename!="#");
 	return 0;
 }
