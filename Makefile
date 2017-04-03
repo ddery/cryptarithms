@@ -1,4 +1,5 @@
 main:
+	mkdir bin
 	g++ -o bin/main src/main.cpp
 	cp data/* bin/
 clean:
